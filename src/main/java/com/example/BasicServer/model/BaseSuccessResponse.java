@@ -5,13 +5,13 @@ import lombok.Data;
 
 @Data
 public class BaseSuccessResponse {
-    private int statusCode;
+    private Long statusCode;
     private boolean success;
 
     public static BaseSuccessResponse toModel(TaskEntity task) {
         BaseSuccessResponse model = new BaseSuccessResponse();
         model.setSuccess(true);
-        model.setStatusCode(1);
+        model.setStatusCode(1L);
         return model;
     }
 }
