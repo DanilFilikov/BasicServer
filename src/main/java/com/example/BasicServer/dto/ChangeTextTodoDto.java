@@ -11,4 +11,5 @@ public class ChangeTextTodoDto {
     @NotNull
     @Size(min = 3, max = 160)
     private String text;
+
 }

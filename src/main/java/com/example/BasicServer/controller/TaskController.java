@@ -1,8 +1,9 @@
-package com.example.BasicServer.controller.todo;
+package com.example.BasicServer.controller;
 
+import com.example.BasicServer.dto.ChangeStatusTodoDto;
+import com.example.BasicServer.dto.ChangeTextTodoDto;
 import com.example.BasicServer.dto.CreateTodoDto;
 import com.example.BasicServer.service.TaskService;
-import com.example.BasicServer.entity.TaskEntity;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +36,8 @@ public class TaskController {
     @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable Long id) {
         try {
-            return ResponseEntity.ok(taskService.delete(id));
+            taskService.delete(id);
+            return ResponseEntity.ok("Task has been deleted");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error");
         }
@@ -45,17 +47,37 @@ public class TaskController {
     public ResponseEntity deleteAllReady() {
         try {
             taskService.deleteAllReady();
-            return ResponseEntity.ok("Ready tasks deleted");
+            return ResponseEntity.ok("Ready tasks has been deleted");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error");
         }
     }
 
     @PatchMapping("/status/{id}")
-    public ResponseEntity patchStatus(@PathVariable Long id, @RequestBody TaskEntity task){
+    public ResponseEntity patchStatus(@PathVariable Long id, @Validated @RequestBody ChangeStatusTodoDto task) {
         try {
             taskService.patchStatus(task, id);
-            return ResponseEntity.ok("Status is patched");
+            return ResponseEntity.ok("Status has been patched");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error");
+        }
+    }
+
+    @PatchMapping("/text/{id}")
+    public ResponseEntity patchText(@PathVariable Long id, @Validated @RequestBody ChangeTextTodoDto task) {
+        try {
+            taskService.patchText(task, id);
+            return ResponseEntity.ok("Text has been patched");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error");
+        }
+    }
+
+    @PatchMapping("/status")
+    public ResponseEntity patch(@Validated @RequestBody ChangeStatusTodoDto task) {
+        try {
+            taskService.patch(task);
+            return ResponseEntity.ok("All tasks has been patched");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error");
         }
