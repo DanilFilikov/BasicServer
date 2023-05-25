@@ -3,11 +3,13 @@ package com.example.BasicServer.controller;
 import com.example.BasicServer.dto.ChangeStatusTodoDto;
 import com.example.BasicServer.dto.ChangeTextTodoDto;
 import com.example.BasicServer.dto.CreateTodoDto;
+import com.example.BasicServer.error.ValidationConstants;
 import com.example.BasicServer.service.TaskService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -39,6 +41,7 @@ public class TaskController {
     public ResponseEntity delete(@PathVariable Long id) {
         try {
             taskService.delete(id);
+            /*throw new MethodArgumentNotValidException();*/
             return ResponseEntity.ok("Task has been deleted");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error");
@@ -86,7 +89,7 @@ public class TaskController {
     }
 
     @GetMapping("/{page}/{perPage}")
-    public ResponseEntity getPaginated(@PathVariable Integer page, @PathVariable Integer perPage, @RequestParam boolean status){
+    public ResponseEntity getPaginated(@PathVariable Integer page, @PathVariable Integer perPage, @RequestParam(required = false) boolean status){
         try {
             return ResponseEntity.ok(taskService.getPaginated(page, perPage, status));
         } catch (Exception e) {
