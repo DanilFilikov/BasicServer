@@ -5,6 +5,7 @@ import com.example.BasicServer.dto.ChangeTextTodoDto;
 import com.example.BasicServer.dto.CreateTodoDto;
 import com.example.BasicServer.entity.TaskEntity;
 import com.example.BasicServer.error.ValidationConstants;
+import com.example.BasicServer.exception.CustomException;
 import com.example.BasicServer.model.BaseSuccessResponse;
 import com.example.BasicServer.model.CustomSuccessResponse;
 import com.example.BasicServer.model.GetNewsDto;
@@ -30,7 +31,7 @@ public class TaskService {
     public BaseSuccessResponse save(CreateTodoDto todo) {
         TaskEntity taskEntity = new TaskEntity();
         taskEntity.setText(todo.getText());
-        return BaseSuccessResponse.toModel(todoRepo.save(taskEntity));
+        return BaseSuccessResponse.getSuccessResponse(todoRepo.save(taskEntity));
     }
 
     public Object getPaginated(@NotNull(message = ValidationConstants.PARAM_PAGE_NOT_NULL)
@@ -53,9 +54,12 @@ public class TaskService {
         }
     }
 
-    public BaseSuccessResponse delete(Long id) throws MethodArgumentNotValidException {
+    public BaseSuccessResponse delete(Long id) throws CustomException {
+        if(todoRepo.findById(id).isEmpty()){
+            throw new CustomException(ValidationConstants.TASK_NOT_FOUND);
+        }
         todoRepo.deleteById(id);
-        return BaseSuccessResponse.toModel(todoRepo.findById(id).get());
+        return BaseSuccessResponse.getSuccessResponse(todoRepo.findById(id).get());
     }
 
     public BaseSuccessResponse deleteAllReady() {
@@ -65,16 +69,22 @@ public class TaskService {
                 todoRepo.delete(entity);
             }
         }
-        return BaseSuccessResponse.toModel((TaskEntity) todoRepo.findAll());
+        return BaseSuccessResponse.getSuccessResponse((TaskEntity) todoRepo.findAll());
     }
 
     public TaskEntity patchStatus(@Validated ChangeStatusTodoDto task, Long id) {
+        if(todoRepo.findById(id).isEmpty()) {
+            throw new CustomException(ValidationConstants.TASK_NOT_FOUND);
+        }
         Optional<TaskEntity> taskEntity = todoRepo.findById(id);
         taskEntity.get().setStatus(task.isStatus());
         return todoRepo.save(taskEntity.get());
     }
 
     public TaskEntity patchText(@Validated ChangeTextTodoDto task, Long id) {
+        if(todoRepo.findById(id).isEmpty()){
+            throw new CustomException(ValidationConstants.TASK_NOT_FOUND);
+        }
         Optional<TaskEntity> taskEntity = todoRepo.findById(id);
         taskEntity.get().setText(task.getText());
         return todoRepo.save(taskEntity.get());

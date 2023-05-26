@@ -14,8 +14,8 @@ public class CustomSuccessResponse {
     private GetNewsDto getNewsDto;
     private Long statusCode;
     private boolean success;
-    private Integer error;
-    private List<Integer> code;
+    private String error;
+    private Integer code;
 
     public static CustomSuccessResponse getSuccessResponse(GetNewsDto getNewsDto){
         CustomSuccessResponse successResponse = new CustomSuccessResponse();
@@ -25,7 +25,7 @@ public class CustomSuccessResponse {
         return successResponse;
     }
 
-    public static CustomSuccessResponse getErrorResponse(Integer error, List<Integer> codes){
+    public static CustomSuccessResponse getErrorResponse(String error, Integer codes){
         CustomSuccessResponse successResponse = new CustomSuccessResponse();
         successResponse.setError(error);
         successResponse.setCode(codes);

@@ -8,7 +8,7 @@ public class BaseSuccessResponse {
     private Long statusCode;
     private boolean success;
 
-    public static BaseSuccessResponse toModel(TaskEntity task) {
+    public static BaseSuccessResponse getSuccessResponse(TaskEntity task) {
         BaseSuccessResponse model = new BaseSuccessResponse();
         model.setSuccess(true);
         model.setStatusCode(1L);
