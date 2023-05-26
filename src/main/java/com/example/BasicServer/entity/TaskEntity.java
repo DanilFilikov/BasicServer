@@ -16,7 +16,6 @@ import javax.persistence.Id;
 import java.time.Instant;
 
 @Data
-@RequiredArgsConstructor
 @Entity
 public class TaskEntity {
     @Id

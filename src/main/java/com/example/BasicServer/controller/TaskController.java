@@ -4,6 +4,7 @@ import com.example.BasicServer.dto.ChangeStatusTodoDto;
 import com.example.BasicServer.dto.ChangeTextTodoDto;
 import com.example.BasicServer.dto.CreateTodoDto;
 import com.example.BasicServer.exception.CustomException;
+import com.example.BasicServer.model.BaseSuccessResponse;
 import com.example.BasicServer.service.TaskService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/todo")
@@ -50,8 +53,9 @@ public class TaskController {
     }
 
     @PatchMapping("/status/{id}")
-    public ResponseEntity patchStatus(@PathVariable Long id, @Validated @RequestBody ChangeStatusTodoDto task) throws CustomException {
-            return ResponseEntity.ok(taskService.patchStatus(task, id));
+    public ResponseEntity patchStatus(@PathVariable Long id, @Valid @RequestBody ChangeStatusTodoDto task) {
+        taskService.patchStatus(task, id);
+            return ResponseEntity.ok(BaseSuccessResponse.getSuccessResponse());
     }
 
     @PatchMapping("/text/{id}")
@@ -59,8 +63,8 @@ public class TaskController {
         return ResponseEntity.ok(taskService.patchText(task, id));
     }
 
-    @PatchMapping("/status")
-    public ResponseEntity patch(@Validated @RequestBody ChangeStatusTodoDto task) {
+    @PatchMapping("/status/")
+    public ResponseEntity patch(@Valid @RequestBody ChangeStatusTodoDto task) {
         try {
             taskService.patch(task);
             return ResponseEntity.ok("All tasks has been patched");

@@ -28,10 +28,11 @@ public class TaskService {
     @Autowired
     TodoRepo todoRepo;
 
-    public BaseSuccessResponse save(CreateTodoDto todo) {
+    public CustomSuccessResponse save(CreateTodoDto todo) {
         TaskEntity taskEntity = new TaskEntity();
         taskEntity.setText(todo.getText());
-        return BaseSuccessResponse.getSuccessResponse(todoRepo.save(taskEntity));
+        todoRepo.save(taskEntity);
+        return CustomSuccessResponse.getSuccessResponse(taskEntity);
     }
 
     public Object getPaginated(@NotNull(message = ValidationConstants.PARAM_PAGE_NOT_NULL)
@@ -59,7 +60,7 @@ public class TaskService {
             throw new CustomException(ValidationConstants.TASK_NOT_FOUND);
         }
         todoRepo.deleteById(id);
-        return BaseSuccessResponse.getSuccessResponse(todoRepo.findById(id).get());
+        return BaseSuccessResponse.getSuccessResponse();
     }
 
     public BaseSuccessResponse deleteAllReady() {
@@ -69,16 +70,17 @@ public class TaskService {
                 todoRepo.delete(entity);
             }
         }
-        return BaseSuccessResponse.getSuccessResponse((TaskEntity) todoRepo.findAll());
+        return BaseSuccessResponse.getSuccessResponse();
     }
 
-    public TaskEntity patchStatus(@Validated ChangeStatusTodoDto task, Long id) {
+    public CustomSuccessResponse patchStatus(ChangeStatusTodoDto task, Long id) throws CustomException {
         if(todoRepo.findById(id).isEmpty()) {
             throw new CustomException(ValidationConstants.TASK_NOT_FOUND);
         }
-        Optional<TaskEntity> taskEntity = todoRepo.findById(id);
-        taskEntity.get().setStatus(task.isStatus());
-        return todoRepo.save(taskEntity.get());
+        TaskEntity tasksEntity = todoRepo.findById(id).get();
+        tasksEntity.setStatus(task.isStatus());
+        todoRepo.save(tasksEntity);
+        return CustomSuccessResponse.getSuccessResponse(tasksEntity);
     }
 
     public TaskEntity patchText(@Validated ChangeTextTodoDto task, Long id) {

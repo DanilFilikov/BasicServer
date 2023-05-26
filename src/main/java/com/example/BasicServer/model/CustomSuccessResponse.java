@@ -4,31 +4,30 @@ import com.example.BasicServer.entity.TaskEntity;
 import com.example.BasicServer.error.ErrorCodes;
 import lombok.Data;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
 public class CustomSuccessResponse {
 
-    private GetNewsDto getNewsDto;
-    private Long statusCode;
+    private Object data;
+    private int statusCode;
     private boolean success;
-    private String error;
     private Integer code;
+    List<Integer> codesList;
 
-    public static CustomSuccessResponse getSuccessResponse(GetNewsDto getNewsDto){
+    public static CustomSuccessResponse getSuccessResponse(Object body){
         CustomSuccessResponse successResponse = new CustomSuccessResponse();
-        successResponse.setGetNewsDto(getNewsDto);
-        successResponse.setStatusCode(1L);
+        successResponse.setData(body);
+        successResponse.setStatusCode(1);
         successResponse.setSuccess(true);
         return successResponse;
     }
 
-    public static CustomSuccessResponse getErrorResponse(String error, Integer codes){
+    public static CustomSuccessResponse getErrorResponse(List<Integer> codesList, Integer codes){
         CustomSuccessResponse successResponse = new CustomSuccessResponse();
-        successResponse.setError(error);
-        successResponse.setCode(codes);
+        successResponse.setCodesList(codesList);
+        successResponse.setStatusCode(codes);
+        successResponse.setSuccess(true);
         return successResponse;
     }
 }

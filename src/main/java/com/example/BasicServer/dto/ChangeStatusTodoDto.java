@@ -3,9 +3,9 @@ package com.example.BasicServer.dto;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Data
 public class ChangeStatusTodoDto {
-    @NotEmpty(message = "Body can't be empty")
     private boolean status;
 }
