@@ -12,11 +12,11 @@ public class GetNewsDto {
     private Long numberOfElements;
     private Long ready;
 
-    public static GetNewsDto GetNewsDto(List<TaskEntity> task){
+    public static GetNewsDto getNewsDto(List<TaskEntity> task){
         GetNewsDto getNewsDto = new GetNewsDto();
         getNewsDto.setContent(task);
-        getNewsDto.setNotReady(task.stream().filter(taskEntity -> !taskEntity.isStatus()).count());
-        getNewsDto.setReady(task.stream().filter(TaskEntity::isStatus).count());
+        getNewsDto.setNotReady(task.stream().filter(taskEntity -> !taskEntity.getStatus()).count());
+        getNewsDto.setReady(task.stream().filter(TaskEntity::getStatus).count());
         getNewsDto.setNumberOfElements((long) task.size());
         return getNewsDto;
     }

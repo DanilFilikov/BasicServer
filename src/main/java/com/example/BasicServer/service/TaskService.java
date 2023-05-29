@@ -14,13 +14,10 @@ import com.example.BasicServer.repository.TodoRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.util.Optional;
 
 @Service
 public class TaskService {
@@ -42,21 +39,21 @@ public class TaskService {
                                @Max(value = 100, message = ValidationConstants.TASKS_PER_PAGE_LESS_OR_EQUAL_100)
                                Integer perPage, Boolean status) {
         if (status == null) {
-            return CustomSuccessResponse.getSuccessResponse(GetNewsDto.GetNewsDto(todoRepo.
+            return CustomSuccessResponse.getSuccessResponse(GetNewsDto.getNewsDto(todoRepo.
                     findAll(PageRequest.of(page, perPage))
                     .getContent()));
         } else {
-            return CustomSuccessResponse.getSuccessResponse(GetNewsDto.GetNewsDto(todoRepo.
+            return CustomSuccessResponse.getSuccessResponse(GetNewsDto.getNewsDto(todoRepo.
                     findAll(PageRequest.of(page, perPage))
                     .getContent()
                     .stream()
-                    .filter(taskEntity -> taskEntity.isStatus() == status)
+                    .filter(taskEntity -> taskEntity.getStatus() == status)
                     .toList()));
         }
     }
 
-    public BaseSuccessResponse delete(Long id) throws CustomException {
-        if(todoRepo.findById(id).isEmpty()){
+    public BaseSuccessResponse delete(Long id) {
+        if(todoRepo.findById(id).isEmpty()) {
             throw new CustomException(ValidationConstants.TASK_NOT_FOUND);
         }
         todoRepo.deleteById(id);
@@ -64,39 +61,31 @@ public class TaskService {
     }
 
     public BaseSuccessResponse deleteAllReady() {
-        for (TaskEntity entity : todoRepo.findAll()
-        ) {
-            if (entity.isStatus()) {
-                todoRepo.delete(entity);
-            }
-        }
+        todoRepo.findAll().stream().filter(TaskEntity::getStatus).forEach(todoRepo::delete);
         return BaseSuccessResponse.getSuccessResponse();
     }
 
-    public CustomSuccessResponse patchStatus(ChangeStatusTodoDto task, Long id) throws CustomException {
+    public BaseSuccessResponse patchStatus(ChangeStatusTodoDto task, Long id)  {
         if(todoRepo.findById(id).isEmpty()) {
             throw new CustomException(ValidationConstants.TASK_NOT_FOUND);
         }
         TaskEntity tasksEntity = todoRepo.findById(id).get();
-        tasksEntity.setStatus(task.isStatus());
+        tasksEntity.setStatus(task.getStatus());
         todoRepo.save(tasksEntity);
-        return CustomSuccessResponse.getSuccessResponse(tasksEntity);
+        return BaseSuccessResponse.getSuccessResponse();
     }
 
-    public TaskEntity patchText(@Validated ChangeTextTodoDto task, Long id) {
+    public BaseSuccessResponse patchText(ChangeTextTodoDto task, Long id){
         if(todoRepo.findById(id).isEmpty()){
             throw new CustomException(ValidationConstants.TASK_NOT_FOUND);
         }
-        Optional<TaskEntity> taskEntity = todoRepo.findById(id);
-        taskEntity.get().setText(task.getText());
-        return todoRepo.save(taskEntity.get());
+        todoRepo.findById(id).get().setText(task.getText());
+        todoRepo.save(todoRepo.findById(id).get());
+        return BaseSuccessResponse.getSuccessResponse();
     }
 
-    public void patch(@Validated ChangeStatusTodoDto task) {
-        for (TaskEntity entity : todoRepo.findAll()
-        ) {
-            entity.setStatus(task.isStatus());
-            todoRepo.save(entity);
-        }
+    public BaseSuccessResponse patch(ChangeStatusTodoDto task) {
+        todoRepo.updateStatus(task.getStatus());
+        return BaseSuccessResponse.getSuccessResponse();
     }
 }

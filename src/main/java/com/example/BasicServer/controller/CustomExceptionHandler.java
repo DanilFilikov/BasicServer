@@ -1,6 +1,5 @@
 package com.example.BasicServer.controller;
 
-import com.example.BasicServer.entity.TaskEntity;
 import com.example.BasicServer.error.ErrorCodes;
 import com.example.BasicServer.error.ValidationConstants;
 import com.example.BasicServer.exception.CustomException;
@@ -9,8 +8,6 @@ import com.example.BasicServer.model.CustomSuccessResponse;
 import java.util.ArrayList;
 import java.util.List;
 
-
-import com.example.BasicServer.model.GetNewsDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;

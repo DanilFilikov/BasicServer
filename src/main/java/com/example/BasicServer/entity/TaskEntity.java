@@ -13,10 +13,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import java.time.Instant;
 
 @Data
 @Entity
+@Table(name = "tasks")
 public class TaskEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +26,7 @@ public class TaskEntity {
     @CreationTimestamp
     private Instant createdAt;
     private String text;
-    private boolean status;
+    private Boolean status = false;
     @UpdateTimestamp
     private Instant updatedAt;
 }
