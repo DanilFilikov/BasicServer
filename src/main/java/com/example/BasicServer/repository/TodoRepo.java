@@ -16,12 +16,16 @@ public interface TodoRepo extends JpaRepository<TaskEntity, Long> {
     @Modifying
     @Query("update TaskEntity t set t.status = :status")
     void updateStatus(@Param("status") boolean status);
+
     @Modifying
     @Query("update TaskEntity t set t.text = :text where t.id = :id")
     void updateTextById(@Param("text") String text, @Param("id") Long id);
+
     @Modifying
     @Query("update TaskEntity t set t.status = :status where t.id = :id")
     void updateStatusById(@Param("status") boolean status, @Param("id") Long id);
+
     List<TaskEntity> findByStatus(Boolean status);
+
     void deleteByStatus(boolean status);
 }

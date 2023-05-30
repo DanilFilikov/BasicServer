@@ -13,9 +13,9 @@ public class CustomSuccessResponse<T> {
     private Integer code;
     private List<Integer> codesList;
 
-    public static <T> CustomSuccessResponse<T> getSuccessResponse(T body){
+    public static <T> CustomSuccessResponse<T> getSuccessResponse(T data){
         CustomSuccessResponse<T> successResponse = new CustomSuccessResponse<>();
-        successResponse.setData(body);
+        successResponse.setData(data);
         successResponse.setStatusCode(1);
         successResponse.setSuccess(true);
         return successResponse;
