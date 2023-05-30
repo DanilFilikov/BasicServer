@@ -21,14 +21,14 @@ import javax.validation.ConstraintViolationException;
 public class CustomExceptionHandler {
 
     @ExceptionHandler(CustomException.class)
-    public ResponseEntity<Object> handle(CustomException e){
+    public ResponseEntity<CustomSuccessResponse<CustomException>> handle(CustomException e){
         List<Integer> codes = new ArrayList<>();
         codes.add(ErrorCodes.getError(e.getMessage()));
         return new ResponseEntity<>(CustomSuccessResponse.getErrorResponse(codes,codes.get(0) ), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Object> handle(MethodArgumentNotValidException e){
+    public ResponseEntity<CustomSuccessResponse<MethodArgumentNotValidException>> handle(MethodArgumentNotValidException e){
         List<Integer> codes = e.getBindingResult()
                 .getAllErrors()
                 .stream()
@@ -38,18 +38,18 @@ public class CustomExceptionHandler {
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity handle(HttpMessageNotReadableException e) {
+    public ResponseEntity<CustomSuccessResponse<HttpMessageNotReadableException>> handle(HttpMessageNotReadableException e) {
         List<Integer> codes = new ArrayList<>();
         codes.add(ErrorCodes.getError(ValidationConstants.HTTP_MESSAGE_NOT_READABLE_EXCEPTION));
-        return new ResponseEntity(CustomSuccessResponse.getErrorResponse(codes,codes.get(0)), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(CustomSuccessResponse.getErrorResponse(codes,codes.get(0)), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity handle(ConstraintViolationException e) {
+    public ResponseEntity<CustomSuccessResponse<ConstraintViolationException>> handle(ConstraintViolationException e) {
         List<Integer> codes = e.getConstraintViolations()
                 .stream()
                 .map(element -> ErrorCodes.getError(element.getMessage()))
                 .toList();
-        return new ResponseEntity(CustomSuccessResponse.getErrorResponse(codes, (codes.get(0))), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(CustomSuccessResponse.getErrorResponse(codes, (codes.get(0))), HttpStatus.BAD_REQUEST);
     }
 }

@@ -9,9 +9,9 @@ public class BaseSuccessResponse {
     private boolean success;
 
     public static BaseSuccessResponse getSuccessResponse() {
-        BaseSuccessResponse model = new BaseSuccessResponse();
-        model.setSuccess(true);
-        model.setStatusCode(1);
-        return model;
+        BaseSuccessResponse baseSuccessResponse = new BaseSuccessResponse();
+        baseSuccessResponse.setSuccess(true);
+        baseSuccessResponse.setStatusCode(1);
+        return baseSuccessResponse;
     }
 }

@@ -12,7 +12,7 @@ public class GetNewsDto {
     private Long numberOfElements;
     private Long ready;
 
-    public static GetNewsDto getNewsDto(List<TaskEntity> task){
+    public static GetNewsDto mapToDto(List<TaskEntity> task){
         GetNewsDto getNewsDto = new GetNewsDto();
         getNewsDto.setContent(task);
         getNewsDto.setNotReady(task.stream().filter(taskEntity -> !taskEntity.getStatus()).count());

@@ -28,11 +28,11 @@ import javax.validation.constraints.Positive;
 public class TaskController {
 
     @Autowired
-    TaskService taskService;
+    private TaskService taskService;
 
     @PostMapping
     public ResponseEntity create(@Valid @RequestBody CreateTodoDto todoDto) {
-        return ResponseEntity.ok(taskService.save(todoDto));
+        return ResponseEntity.ok(taskService.createTask(todoDto));
     }
 
     @DeleteMapping("/{id}")
@@ -60,8 +60,8 @@ public class TaskController {
             return ResponseEntity.ok(taskService.patch(task));
     }
 
-    @GetMapping("/{page}/{perPage}")
-    public ResponseEntity getPaginated(@PathVariable Integer page, @PathVariable Integer perPage, @RequestParam(required = false) boolean status){
+    @GetMapping
+    public ResponseEntity getPaginated(@RequestParam Integer page, @RequestParam Integer perPage, @RequestParam(required = false) boolean status){
             return ResponseEntity.ok(taskService.getPaginated(page, perPage, status));
     }
 }
